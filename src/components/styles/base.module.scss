@@ -1,0 +1,97 @@
+.messageError {
+    @apply text-red-500;
+    @apply text-center;
+    @apply text-xs;
+    @apply italic;
+    @apply pl-6;
+}
+
+.navMenuBtn{
+   @apply text-start;
+   @apply bg-slate-900;
+   @apply text-gray-400;
+   @apply px-4;
+   @apply pt-1;
+   @apply pb-2;
+   @apply hover:bg-slate-700;
+   @apply w-full;
+}
+
+.formBox {
+    @apply flex;
+    @apply flex-col;
+    @apply w-96;
+    @apply m-auto;
+    @apply mt-4;
+    @apply justify-center;
+
+    form {
+        @apply bg-gray-100;
+        @apply rounded;
+        @apply mx-auto;
+        @apply p-2;
+        @apply w-full;
+    }
+}
+
+.formContent {
+    @apply bg-white;
+    @apply shadow-md;
+    @apply rounded;
+    @apply px-8;
+    @apply pt-6;
+    @apply pb-8;
+    @apply mb-4;
+    @apply mx-auto;
+}
+
+.formBtnBox {
+    @apply flex;
+    @apply justify-end;
+    @apply items-center;
+}
+
+.formBtn {
+    @apply bg-slate-700;
+    @apply text-white uppercase;
+    @apply font-light;
+    @apply text-center;
+    @apply py-2;
+    @apply px-4;
+    @apply rounded;
+
+    :hover {
+        @apply bg-slate-500;
+
+    }
+
+    :focus {
+        @apply outline-none;
+        @apply shadow-slate-900;
+    }
+}
+
+.formBtnDelete {
+    @apply bg-red-600;
+    @apply text-gray-400;
+    @apply rounded-full;
+    @apply px-4;
+    @apply pt-1;
+    @apply pb-2;
+    @apply mx-4;
+
+    :hover {
+        @apply bg-red-700;
+    }
+
+    button {
+        @apply flex;
+        @apply justify-end;
+        @apply bg-red-900;
+        @apply rounded;
+        @apply mx-auto;
+        @apply py-4;
+        @apply my-1;
+        @apply w-full;
+    }
+}

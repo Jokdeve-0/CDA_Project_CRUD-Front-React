@@ -1,0 +1,16 @@
+.link{
+    @apply text-white;
+        @apply font-medium;
+        @apply text-sm;
+        @apply px-3;
+        @apply py-2.5;
+
+        @apply w-full;
+        &:hover {
+            @apply bg-gray-900;
+            @apply rounded-sm;
+        }
+    span{
+        @apply ml-1;
+    }
+}

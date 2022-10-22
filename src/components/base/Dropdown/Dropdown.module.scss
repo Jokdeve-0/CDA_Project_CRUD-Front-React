@@ -1,0 +1,90 @@
+.btnDropdown {
+    @apply flex;
+    @apply w-40;
+    @apply items-center;
+    @apply bg-slate-900;
+    @apply text-gray-400;
+    @apply rounded;
+    @apply px-4;
+    @apply py-1;
+    @apply mx-4;
+
+    :hover {
+        @apply bg-slate-700;
+    }
+
+    span:nth-child(1) {
+        @apply text-lg;
+        @apply mr-2;
+    }
+
+    span:nth-child(2) {
+        @apply text-base;
+
+    }
+
+    span:nth-child(3) {
+        @apply text-lg;
+        @apply ml-2
+    }
+}
+
+.dropdownBox {
+    button {
+        @apply text-white;
+        @apply bg-gray-700;
+        @apply font-medium;
+        @apply text-sm;
+        @apply px-5;
+        @apply py-2.5;
+        @apply mr-2;
+        @apply mb-2;
+        @apply w-full;
+        &:hover {
+            @apply bg-gray-900;
+            @apply rounded-sm;
+        }
+
+        &:focus {
+            @apply outline-none;
+            @apply ring-4;
+            @apply ring-gray-700
+        }
+    }
+    ul{
+        @apply w-48;
+    }
+    li{
+        @apply flex;
+        @apply w-full;
+        @apply m-0;
+        @apply p-0;
+        button{
+            @apply m-0;
+            @apply px-4;
+            @apply py-2;
+        }
+    }
+    ul span{
+        @apply flex;
+        @apply w-full;
+    }
+}
+.boxSelect {
+    @apply relative;
+    @apply lg:max-w-sm;
+    select {
+        @apply flex;
+        @apply items-center;
+        @apply bg-slate-900;
+        @apply text-gray-400;
+        @apply rounded-full;
+        @apply px-4;
+        @apply pt-1;
+        @apply pb-2;
+        @apply mx-4;
+        :hover{
+            @apply bg-slate-700;
+        }
+    }
+}

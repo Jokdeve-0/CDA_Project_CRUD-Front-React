@@ -1,0 +1,26 @@
+.boxTable{
+    @apply table;
+    @apply w-full;
+    table{
+        @apply w-full;
+    }
+}
+.tableRow{
+    @apply bg-gray-500;
+}
+.tableHeadCell{
+    @apply p-2 ;
+    @apply text-sm;
+    @apply font-bold;
+    @apply text-start;
+    @apply text-white;
+    @apply rounded-none;
+    border: 1px solid #999999;
+}
+.tableBodyCell{
+    @apply p-2;
+    @apply text-white;
+    @apply rounded-none;
+    @apply bg-slate-900;
+    border: 1px solid #999999;
+}

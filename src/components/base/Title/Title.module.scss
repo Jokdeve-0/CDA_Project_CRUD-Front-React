@@ -1,0 +1,27 @@
+.title{
+
+    @apply bg-slate-900;
+    @apply py-4;
+    @apply my-0;
+    @apply uppercase;
+    @apply font-light;
+    @apply rounded-lg;
+    @apply text-center;
+    @apply text-slate-200;
+    @apply font-semibold;
+    .xl{
+        @apply text-4xl;
+    }
+    .lg{
+        @apply text-3xl;
+    }
+    .md{
+        @apply text-2xl;
+    }
+    .sm{
+        @apply text-xl;
+    }
+    .sx{
+        @apply text-lg;
+    }
+}

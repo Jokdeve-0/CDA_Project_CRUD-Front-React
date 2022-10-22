@@ -1,0 +1,17 @@
+.nav{
+    @apply flex;
+    @apply flex-row;
+    @apply flex-wrap;
+    @apply justify-around;
+    @apply items-center;
+    @apply bg-white;
+    @apply border-gray-200;
+    @apply px-4;
+    @apply lg:px-6;
+    @apply py-2.5;
+    @apply dark:bg-gray-800;
+    div{
+        @apply flex;
+        @apply px-1;
+    }
+}
