@@ -3,15 +3,16 @@ import { Footer } from './Footer/Footer';
 import { Header } from './Header/Header';
 import { Main } from './Main';
 import { Section } from './Section';
-import { H1 } from '../base/Title/H1';
 
 export function LayoutPage({children}) {
     
     return (<>
-        <H1 title="PROJET BONUS CDA" />
+    <div className='flex flex-col min-h-screen'>
         <Header />
         {children}
         <Footer />
+    </div>
+        
     </>);
   }
   LayoutPage.Main = Main;

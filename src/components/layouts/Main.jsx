@@ -2,7 +2,7 @@ import React from 'react';
 
 export function Main({children}) {
     return (
-        <main>
+        <main className='flex-1'>
             {children}
         </main>
     );

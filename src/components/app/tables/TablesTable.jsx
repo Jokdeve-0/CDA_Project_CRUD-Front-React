@@ -3,10 +3,11 @@ import { DatasContext } from '../../../application';
 import { Table } from '../../base/Table/Table';
 import { H2 } from '../../base/Title/H2';
 
-import cssStandard from '../../styles/base.module.scss';
+import { MessageEmpty } from '../errors/Empty';
 export function TablesTable() {
     const datas = React.useContext(DatasContext);
     const [tables] = datas.tables !== null ? datas.tables : [] ;
+    
     return (
     <>
         <H2 title="La table des tables"/>
@@ -25,8 +26,8 @@ export function TablesTable() {
                     ))}
                 </Table.Body>
             </Table>)
-        : <p className={cssStandard.messageError}>Il n'y a aucune table existante.</p>
-        }
+           
+        : <MessageEmpty message={'Il n\'y a aucune table existante.'} />}
     </> 
     ); 
 }

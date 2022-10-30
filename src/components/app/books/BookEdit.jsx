@@ -9,6 +9,10 @@ import { DateTime } from 'luxon';
 import { Button } from '../../base/Button/Button';
 import { H2 } from '../../base/Title/H2';
 import cssStandard from '../../styles/base.module.scss';
+import { MessageError } from '../errors/Errors';
+import { MessageEmpty } from '../errors/Empty';
+import validations from 'src/resources/Validation';
+import { MessageSuccess } from '../errors/Success';
 
 
 export function BookEdit({setBookTable}) {
@@ -16,15 +20,17 @@ export function BookEdit({setBookTable}) {
     const params = new URLSearchParams(window.location.pathname);
     const [id,setId] = useState();
     const [loadingId,setLoadingId] = useState(false);
-    const [book,setBook] = useState();
+    const [book,setBook] = useState("");
     const [loadingBook,setLoadingBook] = useState(false);
-    const [uuid,setUuid] = useState();
-    const [isbn_article,setIsbn_article] = useState();
-    const [title,setTitle] = useState();
-    const [authors,setAuthors] = useState();
-    const [metadata,setMetadata] = useState();
-    const [nav,setNav] = useState();
-    const [editor_id,setEditor_id] = useState();
+    const [uuid,setUuid] = useState("");
+    const [isbn_article,setIsbn_article] = useState("");
+    const [title,setTitle] = useState("");
+    const [authors,setAuthors] = useState("");
+    const [metadata,setMetadata] = useState("");
+    const [nav,setNav] = useState("");
+    const [editor_id,setEditor_id] = useState("");
+    const datas = useContext(DatasContext);
+    const navigate = useNavigate();
 
     useEffect(()=>{
         const getBook= async (bookId)=>{
@@ -51,34 +57,92 @@ export function BookEdit({setBookTable}) {
 
     },[id, book, loadingId, loadingBook, params]);
   
-        const datas = useContext(DatasContext);
-        const navigate = useNavigate();
-        const [error, setError] = useState("");
+    const [error ,setError] = useState();
+    const [errorTitle ,setErrorTitle] = useState();
+    const [errorAuthors ,setErrorAuthors] = useState();
+    const [errorMetadata ,setErrorMetadata] = useState();
+    const [errorNav ,setErrorNav] = useState();
+    const [success, setSuccess] = useState();
+
+    const initErrors = () => {
+        setError();
+        setErrorTitle();
+        setErrorAuthors();   
+        setErrorMetadata();   
+        setErrorNav(); 
+        setSuccess();  
+    }
+
+    const setErrors = (valid) => {
+        setErrorTitle(valid.title);
+        setErrorAuthors(valid.authors);   
+        setErrorMetadata(valid.metadata);   
+        setErrorNav(valid.nav);   
+        setTimeout(()=>{
+            initErrors();
+        },5000)
+    }
  
     const handleSubmit = async () => {
-        const bookEdited = new Book({id:book.id,uuid:uuid ,isbn_article:isbn_article, title:title ,authors:authors ,metadata:metadata ,nav:nav ,editor_id:editor_id ,created_at:book.created_at,updated_at: DateTime.local({locale:"fr"}).toISO()});
-        try{
-            const newBookEdited = await editEntity('book',bookEdited);
-            if(newBookEdited.status === 202){
-                await datasStore.getAllDatas();
-                datasStore.updateDatasStore(datas);
-                setBookTable(bookEdited);
-            }else{
-                setError("❌ Une erreur est intervenue.");
+        const entity = new Book(
+            {
+                id:book.id,
+                uuid:uuid,
+                isbn_article:isbn_article, 
+                title:title,
+                authors:authors,
+                metadata:metadata ,nav:nav,
+                editor_id:editor_id,
+                created_at:book.created_at,
+                updated_at: DateTime.local({locale:"fr"}).toISO()
             }
-        }catch(e){
-            setError("❌ Une erreur est intervenue.");
+        );
+        const valid = validations.checkers(entity,[
+            'uuid',
+            'isbn_article', 
+            'title',
+            'authors',
+            'metadata',
+            'nav',
+            'editor_id']);
+        let isValid = true;
+        for( const val in valid ){if(valid[val]){isValid = false;}}
+        if(isValid){
+            try{
+                const newBookEdited = await editEntity('book',entity);
+                if(newBookEdited.status === 201){
+                    await datasStore.initializeDatasStore(datas);
+                    setBookTable(entity);
+                    setSuccess('Mise à jour !');
+                    setTimeout(()=>{
+                        initErrors();
+                    },5000)
+                }else{
+                    setError(validations.messages.server);
+                    setTimeout(()=>{
+                        initErrors();
+                    },5000)
+                }
+            }catch(e){
+                setError(validations.messages.server);
+                setTimeout(()=>{
+                    initErrors();
+                },5000)
+            }
+        }else{
+            setErrors(valid);
         }
+
+
     }
 
     const handleClick= async () => {
         const isDeleted = await deleteEntity('book',id);
-        if(isDeleted){
-            await datasStore.getAllDatas();
-            datasStore.updateDatasStore(datas);
+        if(isDeleted.status === 201){
+            await datasStore.initializeDatasStore(datas);
             navigate('/home');
         }else{
-            setError("❌ Une erreur est intervenue.");
+            setError(validations.messages.server);
         }
     }
     return (
@@ -91,14 +155,26 @@ export function BookEdit({setBookTable}) {
             }}>
                 <H2 title="Modifier un ouvrage"/>  
                 <div className={cssStandard.formContent}>
-                <p className={cssStandard.messageError}>{error}</p>
-                    <Input label={"Titre de l'ouvrage"} idName={"title"} type={"text"} state={title} setState={setTitle} />
-                    <Input label={"Uuid"} idName={"uuid"} type={"number"} state={uuid} setState={setUuid} />
-                    <Input label={"Isbn Article"} idName={"isbn_article"} type={"number"} state={isbn_article} setState={setIsbn_article} />
-                    <Input label={"Auteurs"} idName={"authors"} type={"text"} state={authors} setState={setAuthors} />
-                    <Input label={"Metadata"} idName={"metadata"} type={"text"} state={metadata} setState={setMetadata} />
-                    <Input label={"Navigation"} idName={"nav"} type={"text"} state={nav} setState={setNav} />
-                    <Input label={"Id éditor"} idName={"editor_id"} type={"text"} state={editor_id} setState={setEditor_id} />
+                {success && <MessageSuccess id="success" success={success} />}
+                  {error && <MessageError error={error} />}
+
+                <hr/>
+                {errorTitle && <MessageError error={errorTitle} />}
+                <Input label={"Titre de l'ouvrage"} idName={"title"} type={"text"} state={title} setState={setTitle} />
+
+                <hr className='my-4'/>
+                {errorAuthors && <MessageError error={errorAuthors} />}
+                <Input label={"Auteurs"} idName={"authors"} type={"text"} state={authors} setState={setAuthors} />
+
+                <hr className='my-4'/>
+                {errorMetadata && <MessageError error={errorMetadata} />}
+                <Input label={"Metadata"} idName={"metadata"} type={"text"} state={metadata} setState={setMetadata} />
+                
+                <hr className='my-4'/>
+                {errorNav && <MessageError error={errorNav} />}
+                <Input label={"Navigation"} idName={"nav"} type={"text"} state={nav} setState={setNav} />
+                
+                <hr className='my-4'/>
                     <div className={cssStandard.formBtnBox}>
                         <Button 
                         type={'submit'}

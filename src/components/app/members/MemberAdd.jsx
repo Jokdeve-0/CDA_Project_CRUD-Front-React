@@ -20,8 +20,7 @@ export function MemberAdd() {
         const editor_member = new BaseEditorMember({editor_id,user_id});
         const newEditor_member = await addEntity('editorMember',editor_member);
         if(newEditor_member){
-            await datasStore.getAllDatas();
-            datasStore.updateDatasStore(datas);
+            await datasStore.initializeDatasStore(datas);
             navigate('/home');
         }else{
             setError("❌ Une erreur est intervenue.");
@@ -46,7 +45,7 @@ export function MemberAdd() {
                 <div className={cssStandard.formBtnBox}>
                     <Button 
                     type={'submit'}
-                    classname={cssStandard.formBtn}
+                    className={cssStandard.formBtn}
                     >Créer</Button>
                 </div>
             </div>

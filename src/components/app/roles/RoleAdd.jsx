@@ -8,24 +8,49 @@ import { datasStore } from '../../../store/resources/DatasStore';
 import { H2 } from '../../base/Title/H2';
 import { Button } from '../../base/Button/Button';
 import cssStandard from '../../styles/base.module.scss';
+import validations from 'src/resources/Validation';
+import { MessageError } from '../errors/Errors';
 
 
 export function RoleAdd() {
+    
+    const initErrors = () => {
+        setError();
+        setErrorName();  
+    }
     const datas = useContext(DatasContext);
     const navigate = useNavigate();
-    const [error, setError] = useState("");
-    const [name, setName] = useState("jok");
+    const [error, setError] = useState();
+    
+    const [errorName, setErrorName] = useState();
+    const [name, setName] = useState("New Role");
+
     const handleSubmit = async () => {
+        initErrors();
         const role = new BaseRole({name});
-        const newRole = await addEntity('role',role);
-        if(newRole){
-            await datasStore.getAllDatas();
-            datasStore.updateDatasStore(datas);
-            navigate('/home');
+        const isValid = validations.checkers(role,['username','mail','password']);
+        if(isValid){
+            try{
+                console.log(datas.token)
+                const newRole = await addEntity('role',role);
+                if(newRole.status === 201){
+                    await datasStore.initializeDatasStore(datas);
+                    navigate('/home');
+                }else{
+                    setError(validations.messages.server);
+                }
+            }catch(e){
+                console.log(e);
+                e.response.data.error 
+                && e.response.data.error.indexOf('role.unique_role_name') !== -1
+                    ? setErrorName(validations.messages.name)
+                    : setError(validations.messages.server);
+            }
         }else{
-            setError("❌ Une erreur est intervenue.");
+            setErrorName(validations.valid.role);
         }
     }
+    
     return (
     <>
      <H2 title="Créer des rôles"/>
@@ -34,17 +59,20 @@ export function RoleAdd() {
             onSubmit={async (e)=>{
                 e.preventDefault();
                 await handleSubmit();
-                }
-            }
-            >
+            }}>
             <H2 title="Nouveau role"/>
             <div className={cssStandard.formContent}>
-                <p className={cssStandard.messageError}>{error}</p>
-                <Input label={"Nom du rôle"} idName={"name"} type={"text"} state={name} setState={setName} />
+                  {error && <MessageError error={error} />}
+
+                {errorName && <MessageError error={errorName} />}
+                <Input label={"Nom du rôle"} 
+                idName={"name"} type={"text"} 
+                state={name} setState={setName} />
+
                 <div className={cssStandard.formBtnBox}>
                     <Button 
                     type={'submit'}
-                    classname={cssStandard.formBtn}
+                    className={cssStandard.formBtn}
                     >Créer</Button>
                 </div>
             </div>

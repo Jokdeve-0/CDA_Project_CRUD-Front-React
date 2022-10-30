@@ -5,10 +5,10 @@ import { formatDate } from '../../../resources/formatDate';
 import { Table } from '../../base/Table/Table';
 import { H2 } from '../../base/Title/H2';
 import cssStandard from '../../styles/base.module.scss';
+import { MessageEmpty } from '../errors/Empty';
 export function EditorsTable() {
     const datas = React.useContext(DatasContext);
     const [editors] = datas.editors !== null ? datas.editors : [] ;
-    // console.log(editors)
     return (
     <>
     <H2 title="La table des editeurs"/>
@@ -40,8 +40,7 @@ export function EditorsTable() {
                 ))}
             </Table.Body>
         </Table>)
-    : <p className={cssStandard.messageError}>Il n'y a aucune donnée dans la table des éditeurs.</p>
-    }
+        : <MessageEmpty message={'Il n\'y a aucune donnée dans la table des éditeurs.'} />}
     </> 
     ); 
 }

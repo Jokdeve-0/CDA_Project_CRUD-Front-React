@@ -9,9 +9,14 @@ import { DateTime } from 'luxon';
 import { Button } from '../../base/Button/Button';
 import { H2 } from '../../base/Title/H2';
 import cssStandard from '../../styles/base.module.scss';
+import { MessageError } from '../errors/Errors';
+import { MessageSuccess } from '../errors/Success';
+import validations from 'src/resources/Validation';
 
 
 export function RoleEdit({setRoleTable}) {
+    const datas = useContext(DatasContext);
+    const navigate = useNavigate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const params = new URLSearchParams(window.location.pathname);
     const [id,setId] = useState();
@@ -19,7 +24,9 @@ export function RoleEdit({setRoleTable}) {
     const [role,setRole] = useState();
     const [loadingRole,setLoadingRole] = useState(false);
     const [name, setRolename] = useState("");
-        const [mail, setMail] = useState("");
+    const [success, setSuccess] = useState();
+    const [errorName, setErrorName] = useState();
+    const [error, setError] = useState();
     useEffect(()=>{
         const getRole= async (roleId)=>{
             const infos = await (await selectEntity('role',{id:roleId})).data.infos;
@@ -34,38 +41,72 @@ export function RoleEdit({setRoleTable}) {
         }
         if(role && !loadingRole){
             setRolename(role.name);
-            setMail(role.mail);
             setLoadingRole(true);
         }
 
-    },[id, role, name, mail, loadingId, loadingRole, params]);
+    },[id, role, name, loadingId, loadingRole, params]);
   
-        const datas = useContext(DatasContext);
-        const navigate = useNavigate();
-        const [error, setError] = useState("");
+    const initErrors = () => {
+        setError();
+        setSuccess();
+        setErrorName();
+    }
  
     const handleSubmit = async () => {
-        const roleEdited = new Role({id:role.id,name:name,mail: mail,created_at:role.created_at,updated_at: DateTime.local({locale:"fr"}).toISO()});
-        try{
-            const newRoleEdited = await editEntity('role',roleEdited);
-            if(newRoleEdited.status === 202){
-                await datasStore.getAllDatas();
-                datasStore.updateDatasStore(datas);
-                setRoleTable(roleEdited);
-            }else{
-                setError("❌ Une erreur est intervenue.");
+        initErrors();
+        const roleEdited = new Role({
+            id:role.id,
+            name:name,
+            created_at:role.created_at,
+            updated_at: DateTime.local({locale:"fr"}).toISO()
+        });
+        const valid = validations.checkers(role,['name']);
+        if(valid){
+            try{
+                const newRoleEdited = await editEntity('role',roleEdited);
+                if(newRoleEdited.status === 201){
+                    await datasStore.initializeDatasStore(datas);
+                    setRoleTable(roleEdited);
+                    setSuccess('Mise à jour !');
+                    setTimeout(()=>{
+                        initErrors();
+                    },5000)
+                }else{
+                    setError(validations.messages.server);
+                    setTimeout(()=>{
+                        initErrors();
+                    },5000)
+                }
+            }catch(e){
+                console.log("error",e)
+                var  {error} = e.response.data;
+                console.log(error)
+                if(error.name){
+                    var time = 5;
+                    setInterval(()=>{
+                        setErrorName(error.message+ ' redirection dans :' +time+'s');
+                        time--;
+                    },1000);
+                    setTimeout(()=>{
+                        navigate('/login');
+                    },6000);
+                }else{
+                    e.response.data.error 
+                    && e.response.data.error.indexOf('role.unique_role_name') !== -1
+                        ? setErrorName(validations.messages.name)
+                        : setError(validations.messages.server);
+                }
             }
-        }catch(e){
-            setError("❌ Une erreur est intervenue.");
+        }else{
+            setErrorName(validations.valid.role);
         }
     }
 
     const handleClick= async () => {
+       
         const isDeleted = await deleteEntity('role',id);
-        console.log(isDeleted)
         if(isDeleted){
-            await datasStore.getAllDatas();
-            datasStore.updateDatasStore(datas);
+            await datasStore.initializeDatasStore(datas);
             navigate('/home');
         }else{
             setError("❌ Une erreur est intervenue.");
@@ -81,8 +122,12 @@ export function RoleEdit({setRoleTable}) {
             }}>
                 <H2 title="Modifier un Role"/>  
                 <div className={cssStandard.formContent}>
-                <p className={cssStandard.messageError}>{error}</p>
+                    {success && <MessageSuccess id="success" success={success} />}
+                    {error && <MessageError error={error} />}
+
+                    {errorName && <MessageError error={errorName} />}
                     <Input label={"Nom du role"} idName={"name"} type={"text"} state={name} setState={setRolename} />
+
                     <div className={cssStandard.formBtnBox}>
                         <Button 
                         type={'submit'}

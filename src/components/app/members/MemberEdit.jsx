@@ -48,12 +48,10 @@ export function MemberEdit({setEditor_memberTable}) {
         const editor_memberEdited = new EditorMember({id:editor_member.id,editor_id:editor_id,user_id: user_id,created_at:editor_member.created_at,updated_at: DateTime.local({locale:"fr"}).toISO()});
         try{
             const newEditor_memberEdited = await editEntity('editorMember',editor_memberEdited);
-            if(newEditor_memberEdited.status === 202){
-                await datasStore.getAllDatas();
-                datasStore.updateDatasStore(datas);
+            if(newEditor_memberEdited.status === 201){
+                await datasStore.initializeDatasStore(datas);
                 setEditor_memberTable(editor_memberEdited);
             }else{
-                console.log('ici')
                 setError("❌ Une erreur est intervenue.");
             }
         }catch(e){
@@ -63,10 +61,8 @@ export function MemberEdit({setEditor_memberTable}) {
 
     const handleClick= async () => {
         const isDeleted = await deleteEntity('editorMember',id);
-        console.log(isDeleted)
         if(isDeleted){
-            await datasStore.getAllDatas();
-            datasStore.updateDatasStore(datas);
+            await datasStore.initializeDatasStore(datas);
             navigate('/home');
         }else{
             setError("❌ Une erreur est intervenue.");

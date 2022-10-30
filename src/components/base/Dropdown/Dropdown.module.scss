@@ -32,17 +32,17 @@
 .dropdownBox {
     button {
         @apply text-white;
+        @apply text-start;
         @apply bg-gray-700;
         @apply font-medium;
         @apply text-sm;
-        @apply px-5;
-        @apply py-2.5;
-        @apply mr-2;
-        @apply mb-2;
         @apply w-full;
+        @apply p-2;
+        @apply rounded-md;
+
         &:hover {
             @apply bg-gray-900;
-            @apply rounded-sm;
+
         }
 
         &:focus {
@@ -51,28 +51,40 @@
             @apply ring-gray-700
         }
     }
-    ul{
-        @apply w-48;
+
+    span {
+        @apply p-0;
+        @apply m-0;
     }
-    li{
+
+    ul {
+        @apply w-40;
+    }
+
+    li {
         @apply flex;
         @apply w-full;
         @apply m-0;
         @apply p-0;
-        button{
+
+        button {
             @apply m-0;
             @apply px-4;
             @apply py-2;
+            @apply text-yellow-300;
         }
     }
-    ul span{
+
+    ul span {
         @apply flex;
         @apply w-full;
     }
 }
+
 .boxSelect {
     @apply relative;
-    @apply lg:max-w-sm;
+    /* @apply lg: max-w-sm; */
+
     select {
         @apply flex;
         @apply items-center;
@@ -83,7 +95,8 @@
         @apply pt-1;
         @apply pb-2;
         @apply mx-4;
-        :hover{
+
+        :hover {
             @apply bg-slate-700;
         }
     }
