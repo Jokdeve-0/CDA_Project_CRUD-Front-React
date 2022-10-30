@@ -6,27 +6,41 @@ import { UsersTable } from 'src/components/app/users/UsersTable';
 import { EditorsTable } from 'src/components/app/editors/EditorsTable';
 import { MembersTable } from 'src/components/app/members/MembersTable';
 import { BooksTable } from 'src/components/app/books/BooksTable';
+import { DatasContext } from 'src/application';
+import { datasStore } from 'src/store/resources/DatasStore';
+
 export function HomePage() {
+    const datas = React.useContext(DatasContext);
+    const [isInitDatas,setInitDatas] = React.useState();
+
+    React.useEffect(()=>{
+        if(!isInitDatas){
+            setTimeout(()=>{
+                datasStore.updateDatasStore(datas);
+                setInitDatas(true);
+            },2000)// just for wathing
+        }
+    }, [datas, isInitDatas])
     return (
         <LayoutPage>
             <LayoutPage.Main>
                 <LayoutPage.Section>
-                   <TablesTable />
+                   <TablesTable isInitDatas={isInitDatas}/> 
                 </LayoutPage.Section>
                 <LayoutPage.Section>
-                    <RolesTable />
+                    <RolesTable isInitDatas={isInitDatas}/> 
                 </LayoutPage.Section>
                 <LayoutPage.Section>
-                    <UsersTable />
+                    <UsersTable isInitDatas={isInitDatas}/> 
                 </LayoutPage.Section>
                 <LayoutPage.Section>
-                    <EditorsTable />
+                    <EditorsTable isInitDatas={isInitDatas}/> 
                 </LayoutPage.Section>
                 <LayoutPage.Section>
-                    <MembersTable />
+                    <MembersTable isInitDatas={isInitDatas}/> 
                 </LayoutPage.Section>
                 <LayoutPage.Section>
-                    <BooksTable />
+                    <BooksTable isInitDatas={isInitDatas}/> 
                 </LayoutPage.Section>
             </LayoutPage.Main>
         </LayoutPage>

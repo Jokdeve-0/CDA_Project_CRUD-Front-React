@@ -83,6 +83,7 @@ class DatasStore {
         this.tablesNames.forEach((table) => {
             localStorage.setItem(table, JSON.parse(localStorage.getItem(table)));
         })
+        localStorage.setItem('tables', JSON.parse(localStorage.getItem('tables')));
     }
 
     getToken() {

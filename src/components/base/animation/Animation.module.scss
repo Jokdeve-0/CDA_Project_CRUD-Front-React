@@ -1,0 +1,12 @@
+@keyframes openTables{
+    from{
+        transform: scale(0.2);
+    }
+    to{
+        transform: scale(1);
+    }
+}
+
+.animate{
+    animation: openTables .3s ease-in-out forwards;
+}
