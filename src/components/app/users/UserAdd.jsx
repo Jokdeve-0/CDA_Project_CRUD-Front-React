@@ -59,7 +59,7 @@ export function UserAdd() {
         if(isValid){
             try{
                 const newUser = await signup(entity);
-                if(newUser.status === 201){
+                if(newUser.status === 200){
                     await datasStore.initializeDatasStore(datas);
                     navigate('/home');
                 }else{

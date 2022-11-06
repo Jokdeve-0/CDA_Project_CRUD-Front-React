@@ -33,8 +33,8 @@ export function BookEdit({setBookTable}) {
 
     useEffect(()=>{
         const getBook= async (bookId)=>{
-            const infos = await (await selectEntity('book',{id:bookId})).data.infos;
-            setBook(infos[0]);
+            const results = await (await selectEntity('book',{id:bookId})).data.results;
+            setBook(results[0]);
         }
         if(!id){
             setId(params.get('id'));
@@ -109,7 +109,7 @@ export function BookEdit({setBookTable}) {
         if(isValid){
             try{
                 const newBookEdited = await editEntity('book',entity);
-                if(newBookEdited.status === 201){
+                if(newBookEdited.status === 200){
                     await datasStore.initializeDatasStore(datas);
                     setBookTable(entity);
                     setSuccess('Mise à jour !');
@@ -135,7 +135,7 @@ export function BookEdit({setBookTable}) {
 
     const handleClick= async () => {
         const isDeleted = await deleteEntity('book',id);
-        if(isDeleted.status === 201){
+        if(isDeleted.status === 200){
             await datasStore.initializeDatasStore(datas);
             navigate('/home');
         }else{

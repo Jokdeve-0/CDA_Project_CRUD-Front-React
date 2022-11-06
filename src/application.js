@@ -53,7 +53,7 @@ export function Application() {
       isTokenValid,
       stateDb,
     }
-
+// console.log(stateDb[0])
     return (
         <DatasContext.Provider value={variablesContext}>
             <BrowserRouter>

@@ -13,8 +13,8 @@ export function MemberDetailsPage() {
     const [loadingEditor_member,setLoadingEditor_member] = useState(false);
     useEffect(()=>{
         const getEditor_member= async (editor_memberId)=>{
-            const infos = await (await selectEntity('editorMember',{id:editor_memberId})).data.infos;
-            setEditor_member(infos[0]);
+            const results = await (await selectEntity('editorMember',{id:editor_memberId})).data.results;
+            setEditor_member(results[0]);
         }
         if(!id){
             setId(params.get('id'));

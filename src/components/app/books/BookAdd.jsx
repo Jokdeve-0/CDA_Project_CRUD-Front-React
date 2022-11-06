@@ -82,7 +82,7 @@ export function BookAdd() {
       if(isValid){
         try{
           const newBook = await addEntity('book',entity);
-          if(newBook.status === 201){
+          if(newBook.status === 200){
               await datasStore.initializeDatasStore(datas);
               navigate('/home');
           }else{

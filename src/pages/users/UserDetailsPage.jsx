@@ -1,20 +1,25 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState,useEffect } from 'react';
+import { EditorMembersEditor } from 'src/components/app/members/EditorMembersEditor';
 import { UserEdit } from '../../components/app/users/UserEdit';
 import { UserTable } from '../../components/app/users/UserTable';
 import { LayoutPage } from '../../components/layouts/LayoutPage';
 import { selectEntity } from '../../store/requests';
 
 export function UserDetailsPage() {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const params = new URLSearchParams(window.location.pathname);
     const [id,setId] = useState();
     const [loadingId,setLoadingId] = useState(false);
     const [user,setUser] = useState();
+    const [editors,setEditors] = useState();
     const [loadingUser,setLoadingUser] = useState(false);
     useEffect(()=>{
         const getUser= async (userId)=>{
-            const infos = await (await selectEntity('user',{id:userId})).data.infos;
-            setUser(infos[0]);
+            const results = await (await selectEntity('user',{id:userId})).data.results;
+            console.log(results)
+            console.log(results)
+            setUser(results['results'][0]);
+            setEditors(results['relationResults']);
         }
         if(!id){
             setId(params.get('id'));
@@ -32,10 +37,13 @@ export function UserDetailsPage() {
         <LayoutPage>
             <LayoutPage.Main>
                 <LayoutPage.Section>
+                    <UserEdit user={user} />
+                </LayoutPage.Section>
+                <LayoutPage.Section>
                  <UserTable user={user} />
                 </LayoutPage.Section>
                 <LayoutPage.Section>
-                    <UserEdit setUserTable={setUser} />
+                  <EditorMembersEditor editors={editors} />
                 </LayoutPage.Section>
             </LayoutPage.Main>
         </LayoutPage>

@@ -13,15 +13,15 @@ import cssStandard from '../../styles/base.module.scss';
 import { MessageError } from '../errors/Errors';
 import validations from 'src/resources/Validation';
 import { MessageSuccess } from '../errors/Success';
+import { current } from 'daisyui/src/colors';
 
 
-export function UserEdit({setUserTable}) {
+export function UserEdit({user}) {
     const navigate = useNavigate();
     const datas = useContext(DatasContext);
     const params = new URLSearchParams(window.location.pathname);
     const [id,setId] = useState();
     const [loadingId,setLoadingId] = useState(false);
-    const [user,setUser] = useState();
     const [loadingUser,setLoadingUser] = useState(false);
     const [username, setUsername] = useState("");
     const [mail, setMail] = useState("");
@@ -47,8 +47,10 @@ export function UserEdit({setUserTable}) {
 
     useEffect(()=>{
         const getUser= async (userId)=>{
-            const infos = await (await selectEntity('user',{id:userId})).data.infos;
-            setUser(infos[0]);
+            const results = await (await selectEntity('user',{id:userId})).data.results;
+            if(results[0]){
+              user[1](results[0]);
+            }
         }
         if(!id){
             setId(params.get('id'));
@@ -80,9 +82,9 @@ export function UserEdit({setUserTable}) {
         if(isValid){
             try{
                 const newUserEdited = await editEntity('user',entity);
-                if(newUserEdited.status === 201){
+                if(newUserEdited.status === 200){
                     await datasStore.initializeDatasStore(datas);
-                    setUserTable(entity);
+                    user[1](entity);
                     setSuccess('Mise à jour !');
                     setTimeout(()=>{
                         initErrors();
@@ -110,7 +112,7 @@ export function UserEdit({setUserTable}) {
 
     const handleClick= async () => {
         const isDeleted = await deleteEntity('user',id);
-        if(isDeleted.status === 201){
+        if(isDeleted.status === 200){
             await datasStore.initializeDatasStore(datas);
             navigate('/home');
         }else{

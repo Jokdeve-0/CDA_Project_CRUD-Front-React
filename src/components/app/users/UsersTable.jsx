@@ -33,7 +33,7 @@ export function UsersTable({isInitDatas}) {
                                 </Table.Cell>
                                 <Table.Cell>
                                     {user.mail}
-                                    <p className='text-xs'>Mot de passe crypté : {user.password}</p>
+                                    <p className='text-xs'>Passe crypté : {(user.password).substring(0,15)}...</p>
                                 </Table.Cell>
                                 <Table.Cell>{user.role_id}</Table.Cell>
                                 <Table.Cell>{formatDate(user.created_at)}</Table.Cell>

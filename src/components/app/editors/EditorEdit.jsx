@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useContext, useEffect } from 'react';
 import { DatasContext } from '../../../application';
 import { deleteEntity, editEntity, selectEntity } from '../../../store/requests';
@@ -14,14 +15,12 @@ import { MessageError } from '../errors/Errors';
 import validations from 'src/resources/Validation';
 
 
-export function EditorEdit({setEditorTable}) {
+export function EditorEdit({editor}) {
     const datas = useContext(DatasContext);
     const navigate = useNavigate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const params = new URLSearchParams(window.location.pathname);
     const [id,setId] = useState();
     const [loadingId,setLoadingId] = useState(false);
-    const [editor,setEditor] = useState();
     const [loadingEditor,setLoadingEditor] = useState(false);
     
     const [error, setError] = useState();
@@ -39,8 +38,10 @@ export function EditorEdit({setEditorTable}) {
 
     useEffect(()=>{
         const getEditor= async (editorId)=>{
-            const infos = await (await selectEntity('editor',{id:editorId})).data.infos;
-            setEditor(infos[0]);
+            const results = await (await selectEntity('editor',{id:editorId})).data.results;
+            if(results[0]){
+              editor[1](results[0]);
+            }
         }
         if(!id){
             setId(params.get('id'));
@@ -94,9 +95,9 @@ export function EditorEdit({setEditorTable}) {
         if(isValid){
             try{
                 const newEditorEdited = await editEntity('editor',entity);
-                if(newEditorEdited.status === 201){
+                if(newEditorEdited.status === 200){
                     await datasStore.initializeDatasStore(datas);
-                    setEditorTable(entity);
+                    editor[1](entity);
                     setSuccess('Mise à jour !');
                     setTimeout(()=>{
                         initErrors();
@@ -132,7 +133,7 @@ export function EditorEdit({setEditorTable}) {
 
     const handleClick= async () => {
         const isDeleted = await deleteEntity('editor',id);
-        if(isDeleted.status === 201){
+        if(isDeleted.status === 200){
             await datasStore.initializeDatasStore(datas);
             navigate('/home');
         }else{

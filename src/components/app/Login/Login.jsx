@@ -21,7 +21,7 @@ export function Login() {
         const isLogin = await login({mail,password});
         if(isLogin.status === 200){
           await datasStore.initializeDatasStore(datas);
-          await setStateToken(datas);
+          setStateToken(datas);
           datas.isTokenValid[1](authentification());
           document.location.href= '/home'       
         }else{

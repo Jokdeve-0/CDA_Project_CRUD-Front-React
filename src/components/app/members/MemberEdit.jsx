@@ -22,8 +22,8 @@ export function MemberEdit({setEditor_memberTable}) {
         const [user_id, setUser_id] = useState("");
     useEffect(()=>{
         const getEditor_member= async (editor_memberId)=>{
-            const infos = await (await selectEntity('editorMember',{id:editor_memberId})).data.infos;
-            setEditor_member(infos[0]);
+            const results = await (await selectEntity('editorMember',{id:editor_memberId})).data.results;
+            setEditor_member(results[0]);
         }
         if(!id){
             setId(params.get('id'));
@@ -48,7 +48,7 @@ export function MemberEdit({setEditor_memberTable}) {
         const editor_memberEdited = new EditorMember({id:editor_member.id,editor_id:editor_id,user_id: user_id,created_at:editor_member.created_at,updated_at: DateTime.local({locale:"fr"}).toISO()});
         try{
             const newEditor_memberEdited = await editEntity('editorMember',editor_memberEdited);
-            if(newEditor_memberEdited.status === 201){
+            if(newEditor_memberEdited.status === 200){
                 await datasStore.initializeDatasStore(datas);
                 setEditor_memberTable(editor_memberEdited);
             }else{

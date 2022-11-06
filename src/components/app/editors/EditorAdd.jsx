@@ -60,7 +60,7 @@ export function EditorAdd() {
         if(isValid){
             try{
                 const newEditror = await addEntity('editor',entity);
-                if(newEditror.status === 201){
+                if(newEditror.status === 200){
                     await datasStore.initializeDatasStore(datas);
                     navigate('/home');
                 }else{

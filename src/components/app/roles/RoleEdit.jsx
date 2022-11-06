@@ -30,8 +30,8 @@ export function RoleEdit({setRoleTable}) {
 
     useEffect(()=>{
         const getRole= async (roleId)=>{
-            const infos = await (await selectEntity('role',{id:roleId})).data.infos;
-            setRole(infos[0]);
+            const results = await (await selectEntity('role',{id:roleId})).data.results;
+            setRole(results[0]);
         }
         if(!id){
             setId(params.get('id'));
@@ -64,7 +64,7 @@ export function RoleEdit({setRoleTable}) {
         if(valid.name === false){
             try{
                 const newRoleEdited = await editEntity('role',roleEdited);
-                if(newRoleEdited.status === 201){
+                if(newRoleEdited.status === 200){
                     await datasStore.initializeDatasStore(datas);
                     setRoleTable(roleEdited);
                     setSuccess('Mise à jour !');

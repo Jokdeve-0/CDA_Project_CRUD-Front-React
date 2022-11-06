@@ -4,7 +4,7 @@ import {Dropdown} from 'flowbite-react';
 import { Button } from '../../base/Button/Button';
 import cssStandard from '../../styles/base.module.scss';
 import { DatasContext } from "src/application";
-import {addFixtures, createTables, deleteDatabase, tablesReset } from "src/store/requests";
+import {addFixtures, createTables, deleteTables, tablesReset } from "src/store/requests";
 import { datasStore } from "src/store/resources/DatasStore";
 import { handleStateDB } from "src/store/resources/handlerStateDB";
 export function DropDatabase() {
@@ -32,7 +32,7 @@ export function DropDatabase() {
     }
 
     const deleted = async () => {
-        const response = await deleteDatabase();
+        const response = await deleteTables();
         const {message} = response.data;
         if (message) {
             localStorage.clear();

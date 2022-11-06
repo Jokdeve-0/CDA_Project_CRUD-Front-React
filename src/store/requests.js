@@ -8,28 +8,27 @@ export async function createDatabase(){
     }});
 }
 export async function createTables(){
-    return axiosInstance.get('database/all',{headers: {
-        "Authorization": `Bearer ${getToken()}`
-    }});
-}
-export async function addFixtures(){
-    return axiosInstance.post('database/add',{},{headers: {
-        "Authorization": `Bearer ${getToken()}`
-    }});
-}
-
-export async function deleteDatabase(){
-    return axiosInstance.delete('database/delete/x',{headers: {
+    return axiosInstance.get('database/create/tables',{headers: {
         "Authorization": `Bearer ${getToken()}`
     }});
 }
 export async function showTables(){   
-    return axiosInstance.patch('database/edit',{},{headers: {
+    return axiosInstance.patch('database/show/tables',{},{headers: {
+        "Authorization": `Bearer ${getToken()}`
+    }});
+}
+export async function addFixtures(){
+    return axiosInstance.post('database/add/entities',{},{headers: {
         "Authorization": `Bearer ${getToken()}`
     }});
 }
 export async function tablesReset(){
-    return axiosInstance.post('database/show',{},{headers: {
+    return axiosInstance.post('database/delete/entities',{},{headers: {
+        "Authorization": `Bearer ${getToken()}`
+    }});
+}
+export async function deleteTables(){
+    return axiosInstance.delete('database/delete/tables',{headers: {
         "Authorization": `Bearer ${getToken()}`
     }});
 }

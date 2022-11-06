@@ -13,8 +13,8 @@ export function RoleDetailsPage() {
     const [loadingRole,setLoadingRole] = useState(false);
     useEffect(()=>{
         const getRole= async (roleId)=>{
-            const infos = await (await selectEntity('role',{id:roleId})).data.infos;
-            setRole(infos[0]);
+            const results = await (await selectEntity('role',{id:roleId})).data.results;
+            setRole(results[0]);
         }
         if(!id){
             setId(params.get('id'));

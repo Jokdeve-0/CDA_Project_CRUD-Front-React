@@ -13,8 +13,8 @@ export function BookDetailsPage() {
     const [loadingBook,setLoadingBook] = useState(false);
     useEffect(()=>{
         const getBook= async (bookId)=>{
-            const infos = await (await selectEntity('book',{id:bookId})).data.infos;
-            setBook(infos[0]);
+            const results = await (await selectEntity('book',{id:bookId})).data.results;
+            setBook(results[0]);
         }
         if(!id){
             setId(params.get('id'));

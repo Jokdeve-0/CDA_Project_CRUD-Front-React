@@ -60,7 +60,7 @@ class DatasStore {
     retrieveTablesNames = async () => {
         try {
             const response = await showTables();
-            const tables = response.data.infos;
+            const tables = response.data.results;
             if (tables) {
                 localStorage.setItem('tables', JSON.stringify(tables));
                 return tables;
@@ -73,9 +73,9 @@ class DatasStore {
     // all database data
     retrieveAll = async (table) => {
         const response = await selectAll(table);
-        if (response.data.infos) {
-            localStorage.setItem(`${table}s`, JSON.stringify(response.data.infos));
-            return response.data.infos;
+        if (response.data.results) {
+            localStorage.setItem(`${table}s`, JSON.stringify(response.data.results));
+            return response.data.results;
         } else {
             localStorage.setItem(`${table}s`, JSON.stringify([]));
             return [];
