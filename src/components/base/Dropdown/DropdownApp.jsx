@@ -4,6 +4,7 @@ import {Dropdown} from 'flowbite-react'
 import styles from './Dropdown.module.scss'
 import { useNavigate } from "react-router-dom";
 import { DatasContext } from "src/application";
+import { logout } from "src/store/requests";
 export function DropdownApp() {
     const navigate = useNavigate();
     const {isTokenValid} = React.useContext(DatasContext);
@@ -26,8 +27,10 @@ export function DropdownApp() {
 
 {isTokenValid[0] && (<>
     <Dropdown.Item>
-        <LinkMenu onclick={(e)=>{
+        <LinkMenu onclick={async (e)=>{
             e.preventDefault();
+            await logout();
+            
             localStorage.clear();
             navigate('/login');
             isTokenValid[1](false);

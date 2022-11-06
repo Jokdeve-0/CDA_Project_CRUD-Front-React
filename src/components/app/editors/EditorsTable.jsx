@@ -7,6 +7,7 @@ import { H2 } from '../../base/Title/H2';
 import { MessageEmpty } from '../errors/Empty';
 import { Spinner } from 'src/components/base/Spinner/Spinner';
 import { Animation } from 'src/components/base/animation/Animation';
+
 export function EditorsTable({isInitDatas}) {
     const datas = React.useContext(DatasContext);
     const [editors] = datas.editors !== null ? datas.editors : [] ;

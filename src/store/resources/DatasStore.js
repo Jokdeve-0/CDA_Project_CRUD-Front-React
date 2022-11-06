@@ -7,35 +7,53 @@ const {
 class DatasStore {
 
     constructor() {
-        this.tablesNames = ['users', 'editors', 'editorMembers', 'roles', 'books']
+        this.tablesNames = ['users', 'editors',
+         'editorMembers', 'roles', 'books','tables'];
+         this.DbTables = undefined;
     }
-
-    // init context
+    /**
+     * manages the update of the store
+     * @param {store(DatasContext)} datas 
+     */
+    // 
     initializeDatasStore = async (datas) => {
-        await this.getAllDatas();
-        this.updateDatasStore(datas);
+        const response = await this.getAllDatas();
+        if(response){
+          this.updateDatasStore(datas);
+        }
     }
-    // get all datas in DB
+    /**
+     * (get all database data)
+     * 1. use retrieveTablesNames() to retrieve table names that exist in the database
+     * 2. loop over the array of table names and use retrieveAll() to retrieve all database data
+     * 3. reallocate new data in localstorage
+     * return void 
+     */
     getAllDatas = async () => {
         try {
+          // if tables exists
+          if(!this.DbTables){
             const tables = await this.retrieveTablesNames();
-
-            if (tables.length > 0) {
-                for (let i = 0; i < tables.length; i++) {
+            this.DbTables = tables;
+          }
+            if (this.DbTables.length > 0) {
+                for (let i = 0; i < this.DbTables.length; i++) {
                     let tableName = '';
                     // separates table names with underscore and hangs them up in camelCase
-                    if (tables[i].Tables_in_moovleendb.indexOf('_') !== -1) {
-                        const tableNames = tables[i].Tables_in_moovleendb.split('_');
+                    if (this.DbTables[i].Tables_in_moovleendb.indexOf('_') !== -1) {
+                        const tableNames = this.DbTables[i].Tables_in_moovleendb.split('_');
                         tableName = `${tableNames[0]}${tableNames[1].charAt(0).toUpperCase()}${tableNames[1].slice(1)}`;
                     } else {
-                        tableName = tables[i].Tables_in_moovleendb;
+                        tableName = this.DbTables[i].Tables_in_moovleendb;
                     }
                     await this.retrieveAll(tableName);
                 }
             }
+          return true;
 
         } catch (error) {
             l.log('DatasStore', 57, error, "getAllDatas");
+            return false;
         }
     }
     // get all tables name
@@ -52,7 +70,7 @@ class DatasStore {
             l.log('DatasStore', 20, error.response.error, "showTables");
         }
     }
-    // get all datas in all tables
+    // all database data
     retrieveAll = async (table) => {
         const response = await selectAll(table);
         if (response.data.infos) {
@@ -63,33 +81,34 @@ class DatasStore {
             return [];
         }
     }
-    // set context datas 
+    /**
+     * manages the update of the store 
+     * and the refreshing of the components
+     * @param {store(DatasContext)} datas 
+     */
+    // set context datas (state variable)
     updateDatasStore = (datas) => {
         this.tablesNames.forEach((table) => {
-            datas[table][1](JSON.parse(localStorage.getItem(table)));
+            if(localStorage.getItem(table))
+                datas[table][1](JSON.parse(localStorage.getItem(table)));
         })
         datas.tables[1](JSON.parse(localStorage.getItem('tables')));
-        datas.token[1](JSON.parse(localStorage.getItem('token')));
     }
 
-    // remove items context 
+    // remove items context (localstorage)
     resetDatasStoreItems = () => {
         this.tablesNames.forEach((table) => {
-            localStorage.setItem(table, []);
+            localStorage.setItem(table, JSON.stringify([]));
         })
-    }
-    // update context datas
-    updateDatasStoreItems = () => {
-        this.tablesNames.forEach((table) => {
-            localStorage.setItem(table, JSON.parse(localStorage.getItem(table)));
-        })
-        localStorage.setItem('tables', JSON.parse(localStorage.getItem('tables')));
     }
 
     getToken() {
-        return JSON.parse(localStorage.getItem('token')) ?
+        return localStorage.getItem('token') && localStorage.getItem('token').length > 0 ?
             JSON.parse(localStorage.getItem('token')) :
             undefined;
+    }
+    setStateToken(datas) {
+        datas.token[1](JSON.parse(localStorage.getItem('token')));
     }
 
 

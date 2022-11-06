@@ -28,12 +28,11 @@ export function RoleAdd() {
     const handleSubmit = async () => {
         initErrors();
         const role = new BaseRole({name});
-        const isValid = validations.checkers(role,['username','mail','password']);
-        if(isValid){
+        const isValid = validations.checkers(role,['name']);
+        if(!isValid.name){
             try{
-                console.log(datas.token)
-                const newRole = await addEntity('role',role);
-                if(newRole.status === 201){
+                const response = await addEntity('role',role);
+                if(response.status === 201){
                     await datasStore.initializeDatasStore(datas);
                     navigate('/home');
                 }else{
@@ -41,8 +40,9 @@ export function RoleAdd() {
                 }
             }catch(e){
                 console.log(e);
-                e.response.data.error 
-                && e.response.data.error.indexOf('role.unique_role_name') !== -1
+                console.log(e.response.data.error.sqlMessage.indexOf('role.unique_role_name') !== -1);
+                e.response
+                && e.response.data.error.sqlMessage.indexOf('role.unique_role_name') !== -1
                     ? setErrorName(validations.messages.name)
                     : setError(validations.messages.server);
             }

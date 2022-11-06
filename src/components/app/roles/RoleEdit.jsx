@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useContext, useEffect } from 'react';
 import { DatasContext } from '../../../application';
 import { deleteEntity, editEntity, selectEntity } from '../../../store/requests';
@@ -17,7 +18,6 @@ import validations from 'src/resources/Validation';
 export function RoleEdit({setRoleTable}) {
     const datas = useContext(DatasContext);
     const navigate = useNavigate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const params = new URLSearchParams(window.location.pathname);
     const [id,setId] = useState();
     const [loadingId,setLoadingId] = useState(false);
@@ -27,6 +27,7 @@ export function RoleEdit({setRoleTable}) {
     const [success, setSuccess] = useState();
     const [errorName, setErrorName] = useState();
     const [error, setError] = useState();
+
     useEffect(()=>{
         const getRole= async (roleId)=>{
             const infos = await (await selectEntity('role',{id:roleId})).data.infos;
@@ -43,7 +44,6 @@ export function RoleEdit({setRoleTable}) {
             setRolename(role.name);
             setLoadingRole(true);
         }
-
     },[id, role, name, loadingId, loadingRole, params]);
   
     const initErrors = () => {
@@ -60,27 +60,24 @@ export function RoleEdit({setRoleTable}) {
             created_at:role.created_at,
             updated_at: DateTime.local({locale:"fr"}).toISO()
         });
-        const valid = validations.checkers(role,['name']);
-        if(valid){
+        const valid = validations.checkers(roleEdited,['name']);
+        if(valid.name === false){
             try{
                 const newRoleEdited = await editEntity('role',roleEdited);
                 if(newRoleEdited.status === 201){
                     await datasStore.initializeDatasStore(datas);
                     setRoleTable(roleEdited);
                     setSuccess('Mise à jour !');
-                    setTimeout(()=>{
-                        initErrors();
-                    },5000)
                 }else{
                     setError(validations.messages.server);
-                    setTimeout(()=>{
-                        initErrors();
-                    },5000)
                 }
+                setTimeout(()=>{
+                  initErrors();
+              },5000)
             }catch(e){
-                console.log("error",e)
+                // console.log("error",e)
                 var  {error} = e.response.data;
-                console.log(error)
+                // console.log(error)
                 if(error.name){
                     var time = 5;
                     setInterval(()=>{

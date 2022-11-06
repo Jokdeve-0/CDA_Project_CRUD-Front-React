@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { DatasContext } from '../../../application';
 import { formatDate } from '../../../resources/formatDate';
@@ -8,7 +8,7 @@ import { MessageEmpty } from '../errors/Empty';
 import { Spinner } from 'src/components/base/Spinner/Spinner';
 import { Animation } from 'src/components/base/animation/Animation';
 export function BooksTable({isInitDatas}) {
-    const datas = React.useContext(DatasContext);
+    const datas = useContext(DatasContext);
     const [books] = datas.books !== null ? datas.books : [] ;
     return (
     <>

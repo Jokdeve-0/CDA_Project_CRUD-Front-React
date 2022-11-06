@@ -1,6 +1,5 @@
-import React, {useState,useContext} from 'react';
-import {BrowserRouter, Navigate, Route, Routes, redirect} from 'react-router-dom';
-import { indigo } from 'tailwindcss/colors';
+import React, {useState} from 'react';
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import { BookAddPage } from './pages/books/BookAddPage';
 import { BookDetailsPage } from './pages/books/BookDetailsPage';
 import { EditorAddPage } from './pages/editors/EditorAddPage';
@@ -13,67 +12,62 @@ import { RoleAddPage } from './pages/roles/RoleAddPage';
 import { RoleDetailsPage } from './pages/roles/RoleDetailsPage';
 import { UserAddPage } from './pages/users/UserAddPage';
 import { UserDetailsPage } from './pages/users/UserDetailsPage';
-
-import { authentification } from './store/resources/authentification';
-import { datasStore } from './store/resources/DatasStore';
+import { getCSRFToken } from './store/requests';
+import { authentification, getToken } from './store/resources/authentification';
+import { handleStateDB } from './store/resources/handlerStateDB';
 
 const DatasContext = React.createContext({}); 
 
 export function Application() {
-    const datas = useContext(DatasContext);
-
     //check token is valid (initApp)
-    const [isTokenValid,setIsTokenValid]= useState(authentification());
-    // init datasStore
+    const isTokenValid = useState(authentification());
+    // init datasStore (state variable)
     const tables = useState();
     const users = useState();
     const editors = useState();
     const books = useState();
     const roles = useState();
     const editorMembers = useState();
-    const token = useState();
-    //init Tables
-    const stateDb = React.useState();
+
+    const token = useState(getToken());
+    const stateDb = useState();
+    getCSRFToken();
+
     React.useEffect(()=>{
-        if(isTokenValid === undefined){
-            if(authentification()){
-                setIsTokenValid(true);
-                token[1](datasStore.getToken());
-                datasStore.getAllDatas();
-                document.location.href='/home';
-            }else{
-                setIsTokenValid(false);
-                document.location.href='/login';
-            }
+        const initApp = async (stateDb) => {
+            await handleStateDB({stateDb});
         }
-
-        if(!stateDb){
-            if(localStorage.getItem('tables')
-                && localStorage.getItem('tables').length > 0){
-                    stateDb[1]("ready");
-                    if(localStorage.getItem('users')
-                        && localStorage.getItem('users').length > 0){
-                            stateDb[1]("full")
-                    }
-            }else{stateDb[1]("empty")}
+        if(!stateDb[0]){
+            initApp(stateDb);
         }
-    },[datas, token, isTokenValid, stateDb]);
- 
+    },[isTokenValid, stateDb]);
 
-   
+    const variablesContext = {
+      tables,
+      users,
+      editors,
+      books,
+      roles,
+      editorMembers,
+      token,
+      isTokenValid,
+      stateDb,
+    }
+
     return (
-        <DatasContext.Provider value={
-            {tables,users,editors,books,roles,editorMembers,token,isTokenValid:[isTokenValid,setIsTokenValid],stateDb}
-            }>
+        <DatasContext.Provider value={variablesContext}>
             <BrowserRouter>
             <Routes>
+
+            {!isTokenValid[0] && <>
                 <Route path="signup" element={<UserAddPage />} />
                 <Route path="login" element={<LoginPage />} />
-            {!isTokenValid && <Route path="*" element={<Navigate to="/login" replace />} />}
+               <Route path="*" element={<Navigate to="/login" replace />} />
+              </>}
 
-            {isTokenValid && (<>
-                <Route path="logout" element={<LoginPage />} />
+            {isTokenValid[0] && (<>
                 <Route path="home" element={<HomePage />} />
+                <Route path="signup" element={<UserAddPage />} />
 
                 <Route path="user/add" element={<UserAddPage />} />
                 <Route path="user/edit&id=:id" element={<UserAddPage />} />
@@ -96,7 +90,7 @@ export function Application() {
         
                 <Route path="*" element={<Navigate to="/home" replace />} />
             </>)}
-
+            
             </Routes>
             </BrowserRouter>
         </DatasContext.Provider>
