@@ -1,14 +1,14 @@
 import React, {useState, useContext } from 'react';
-import { DatasContext } from '../../../application';
-import { addEntity } from '../../../store/requests';
+import { DatasContext } from 'src/application';
+import { addEntity } from 'src/store/requests';
 import { useNavigate } from "react-router-dom";
-import { Input } from '../../base/Input/Input';
-import { H2 } from '../../base/Title/H2';
-import { datasStore } from '../../../store/resources/DatasStore';
-import { BaseEditor } from '../../../models/Editor';
-import { Button } from '../../base/Button/Button';
-import cssStandard from '../../styles/base.module.scss';
-import { MessageError } from '../errors/Errors';
+import { Input } from 'src/components/base/Input/Input';
+import { H2 } from 'src/components/base/Title/H2';
+import { datasStore } from 'src/store/resources/DatasStore';
+import { BaseEditor } from 'src/models/Editor';
+import { Button } from 'src/components/base/Button/Button';
+import cssStandard from 'src/components/styles/base.module.scss';
+import { MessageError } from 'src/components/app/errors/Errors';
 import validations from 'src/resources/Validation';
 
 

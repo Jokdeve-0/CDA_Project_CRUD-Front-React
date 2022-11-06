@@ -12,10 +12,8 @@ import validations from 'src/resources/Validation';
 import { MessageError } from '../errors/Errors';
 import { MessageEmpty } from '../errors/Empty';
 
-
 export function BookAdd() {
     const datas = useContext(DatasContext);
-
     const navigate = useNavigate();
 
     const [uuid,setUuid] = useState(124578);
@@ -60,49 +58,48 @@ export function BookAdd() {
     }
 
     const handleSubmit = async () => {
-
-        const entity = new BaseBook(
-            {
-                uuid:uuid,
-                isbn_article:isbn_article, 
-                title:title,
-                authors:authors,
-                metadata:metadata,
-                nav:nav,
-                editor_id:editor_id
-            });
-            const valid = validations.checkers(entity,[
-            'uuid',
-            'isbn_article', 
-            'title',
-            'authors',
-            'metadata',
-            'nav',
-            'editor_id']);
-            let isValid = true;
-            for( const val in valid ){if(valid[val]){isValid = false;}}
-            if(isValid){
-                try{
-                    const newBook = await addEntity('book',entity);
-                    if(newBook.status === 201){
-                        await datasStore.initializeDatasStore(datas);
-                        navigate('/home');
-                    }else{
-                        setError(validations.messages.server);
-                        setTimeout(()=>{
-                            initErrors();
-                        },5000)
-                    }
-                }catch(e){
-                    setError(validations.messages.server);
-                    setTimeout(()=>{
-                        initErrors();
-                    },5000)
-                }
-            }else{
-                setErrors(valid);
-            }
-        
+      const entity = new BaseBook(
+        {
+          uuid:uuid,
+          isbn_article:isbn_article, 
+          title:title,
+          authors:authors,
+          metadata:metadata,
+          nav:nav,
+          editor_id:editor_id
+        });
+      const valid = validations.checkers(entity,[
+        'uuid',
+        'isbn_article', 
+        'title',
+        'authors',
+        'metadata',
+        'nav',
+        'editor_id'
+    ]);
+      let isValid = true;
+      for( const val in valid ){if(valid[val]){isValid = false;}}
+      if(isValid){
+        try{
+          const newBook = await addEntity('book',entity);
+          if(newBook.status === 201){
+              await datasStore.initializeDatasStore(datas);
+              navigate('/home');
+          }else{
+              setError(validations.messages.server);
+              setTimeout(()=>{
+                  initErrors();
+              },5000)
+          }
+        }catch(e){
+          setError(validations.messages.server);
+          setTimeout(()=>{
+              initErrors();
+          },5000)
+        }
+      }else{
+          setErrors(valid);
+      }
     }
     return (
     <>

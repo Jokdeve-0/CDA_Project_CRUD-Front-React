@@ -17,10 +17,10 @@ export function UserAdd() {
     const datas = useContext(DatasContext);
     const navigate = useNavigate();
 
-    const [username, setUsername] = useState();
-    const [mail, setMail] = useState();
-    const [password, setPassword] = useState();
-    const [passwordConfiration, setPasswordConfiration] = useState();
+    const [username, setUsername] = useState('');
+    const [mail, setMail] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordConfiration, setPasswordConfiration] = useState('');
     // toggle password icon
     const [typePassword, setTypePassword] = useState(true);
     const [icon, setIcon] = useState(true);

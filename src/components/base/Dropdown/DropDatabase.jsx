@@ -4,14 +4,15 @@ import {Dropdown} from 'flowbite-react';
 import { Button } from '../../base/Button/Button';
 import cssStandard from '../../styles/base.module.scss';
 import { DatasContext } from "src/application";
-import {createDatabase, deleteDatabase, tablesReset } from "src/store/requests";
+import {addFixtures, createTables, deleteDatabase, tablesReset } from "src/store/requests";
 import { datasStore } from "src/store/resources/DatasStore";
+import { handleStateDB } from "src/store/resources/handlerStateDB";
 export function DropDatabase() {
     const datas = useContext(DatasContext);
     const tables = datas.tables;
 
    const created = async () => {
-       const response = await createDatabase();
+       const response = await createTables();
        const {message} = response.data;
        if (message) {
            await datasStore.retrieveTablesNames();
@@ -25,8 +26,8 @@ export function DropDatabase() {
         const {message} = response.data;
         if (message) {
             datasStore.resetDatasStoreItems();
-            datasStore.updateDatasStore(datas);
-            datas.stateDb[1]("ready");
+            await datasStore.initializeDatasStore(datas);
+            await handleStateDB(datas);
         }
     }
 
@@ -41,9 +42,19 @@ export function DropDatabase() {
         
     }
 
+    const completed = async () => {
+      await addFixtures();
+      await datasStore.initializeDatasStore(datas);
+      await handleStateDB(datas);
+  }
+
     return (<>
         <div className={styles.dropdownBox}>
+
+
             <Dropdown label="Base de données">
+            {datas.stateDb[0] === "empty" &&
+                <>
                 <Dropdown.Item>
                     <Button type = 'button' className ={cssStandard.navMenuBtn}
                         value = 'Créer toutes les tables'
@@ -51,6 +62,22 @@ export function DropDatabase() {
                     />                
                 </Dropdown.Item>
                 <Dropdown.Divider />
+                </>
+            }
+            {datas.stateDb[0] === "ready" &&
+              <>
+              <Dropdown.Item>
+                  <Button
+                      type = 'button' className ={cssStandard.navMenuBtn}
+                      value = 'Ajouter les fixtures'
+                      onClick = {async () => {await completed();}}
+                  />
+              </Dropdown.Item>
+              <Dropdown.Divider />
+            </>
+            }
+            {datas.stateDb[0] === "full" &&
+                <>
                 <Dropdown.Item>
                     <Button
                         type = 'button' className ={cssStandard.navMenuBtn}
@@ -59,6 +86,9 @@ export function DropDatabase() {
                     />
                 </Dropdown.Item>
                 <Dropdown.Divider />
+                </>
+            }
+            {datas.stateDb[0] !== "empty" &&
                 <Dropdown.Item>
                     <Button
                         type = 'button' className ={cssStandard.navMenuBtn}
@@ -66,7 +96,9 @@ export function DropDatabase() {
                         onClick = {async () => {await deleted();}}
                     />
                 </Dropdown.Item>
+            }
             </Dropdown>
+
         </div>
    </> );
 }

@@ -3,8 +3,6 @@ import { formatDate } from '../../../resources/formatDate';
 import { Table } from '../../base/Table/Table';
 import { H2 } from '../../base/Title/H2';
 
-
-
 export function RoleTable({role}) {
     return (<>
         <H2 title="Les détails d'un rôle"/>

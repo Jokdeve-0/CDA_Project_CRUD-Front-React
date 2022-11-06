@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useContext, useEffect } from 'react';
 import { DatasContext } from '../../../application';
 import { deleteEntity, editEntity, selectEntity } from '../../../store/requests';
@@ -10,13 +11,11 @@ import { Button } from '../../base/Button/Button';
 import { H2 } from '../../base/Title/H2';
 import cssStandard from '../../styles/base.module.scss';
 import { MessageError } from '../errors/Errors';
-import { MessageEmpty } from '../errors/Empty';
 import validations from 'src/resources/Validation';
 import { MessageSuccess } from '../errors/Success';
 
 
 export function BookEdit({setBookTable}) {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const params = new URLSearchParams(window.location.pathname);
     const [id,setId] = useState();
     const [loadingId,setLoadingId] = useState(false);
@@ -132,8 +131,6 @@ export function BookEdit({setBookTable}) {
         }else{
             setErrors(valid);
         }
-
-
     }
 
     const handleClick= async () => {
@@ -145,6 +142,7 @@ export function BookEdit({setBookTable}) {
             setError(validations.messages.server);
         }
     }
+    
     return (
     <>
         <div className={cssStandard.formBox}>

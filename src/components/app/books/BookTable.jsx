@@ -4,8 +4,6 @@ import { formatDate } from '../../../resources/formatDate';
 import { Table } from '../../base/Table/Table';
 import { H2 } from '../../base/Title/H2';
 
-
-
 export function BookTable({book}) {
     return (<>
         <H2 title="Les détails d'un utilisateur"/>

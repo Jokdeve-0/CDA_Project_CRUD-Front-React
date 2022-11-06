@@ -140,3 +140,19 @@
         @apply cursor-no-drop;
     }
 }
+
+.btnDatabase{
+  @apply p-2;
+  @apply ml-4;
+  @apply bg-green-600;
+  @apply text-white;
+  @apply font-bold;
+  @apply rounded-md;
+}
+.boxAlert{
+  @apply p-1;
+  svg{
+    width:35px;
+    height:35px;
+  }
+}

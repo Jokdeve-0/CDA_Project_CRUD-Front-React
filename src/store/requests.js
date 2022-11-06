@@ -1,21 +1,37 @@
+import { getToken } from "./resources/authentification";
 import { axiosInstance } from "./resources/axiosInstance";
-import { datasStore } from "./resources/DatasStore";
+import { axiosInstanceStarting } from "./resources/axiosInstanceStarting";
 
 export async function createDatabase(){
-    return axiosInstance.get('database/create');
+    return axiosInstanceStarting.get('create/database',{headers: {
+        "Authorization": `Bearer ${getToken()}`
+    }});
+}
+export async function createTables(){
+    return axiosInstance.get('database/all',{headers: {
+        "Authorization": `Bearer ${getToken()}`
+    }});
 }
 export async function addFixtures(){
-    return axiosInstance.get('database/addFixtures');
+    return axiosInstance.post('database/add',{},{headers: {
+        "Authorization": `Bearer ${getToken()}`
+    }});
 }
 
 export async function deleteDatabase(){
-    return axiosInstance.get('database/delete');
+    return axiosInstance.delete('database/delete/x',{headers: {
+        "Authorization": `Bearer ${getToken()}`
+    }});
 }
 export async function showTables(){   
-    return axiosInstance.get('database/tables');
+    return axiosInstance.patch('database/edit',{},{headers: {
+        "Authorization": `Bearer ${getToken()}`
+    }});
 }
 export async function tablesReset(){
-    return axiosInstance.get('database/clear');
+    return axiosInstance.post('database/show',{},{headers: {
+        "Authorization": `Bearer ${getToken()}`
+    }});
 }
 // AUTH
 export async function signup(entity){
@@ -24,34 +40,41 @@ export async function signup(entity){
 export async function login(entity){
     return axiosInstance.post(`auth/login`,entity);
 }
+export async function logout(entity){
+    return axiosInstance.get(`auth/logout`,entity);
+}
+export async function getCSRFToken() {
+    await axiosInstance.get('/csrfToken');
+ };
 
 // GEN
 export async function selectAll(table){
-    return axiosInstance.get(`${table}/all`);
-
+    return axiosInstance.get(`${table}/all`,{headers: {
+        "Authorization": `Bearer ${getToken()}`
+    }});
 }
 
 export async function addEntity(table,entity){
     return axiosInstance.post(`${table}/add`,entity,{headers: {
-        "Authorization": `Bearer ${datasStore.getToken()}`
+        "Authorization": `Bearer ${getToken()}`
     }});
 }
 
 export async function editEntity(table,entity){
     return axiosInstance.patch(`${table}/edit`,entity,
     {headers: {
-        "Authorization": `Bearer ${datasStore.getToken()}`
+        "Authorization": `Bearer ${getToken()}`
     }});
 }
 
 export async function selectEntity(table,id){
     return axiosInstance.post(`${table}/show`,id,{headers: {
-        "Authorization": `Bearer ${datasStore.getToken()}`
+        "Authorization": `Bearer ${getToken()}`
     }});
 }
 
 export async function deleteEntity(table,id){
     return axiosInstance.delete(`${table}/delete/${id}`,{headers: {
-        "Authorization": `Bearer ${datasStore.getToken()}`
+        "Authorization": `Bearer ${getToken()}`
     }});
 }

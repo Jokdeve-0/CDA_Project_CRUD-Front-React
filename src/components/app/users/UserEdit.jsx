@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useContext, useEffect } from 'react';
 import { DatasContext } from '../../../application';
 import { deleteEntity, editEntity, selectEntity } from '../../../store/requests';
@@ -17,7 +18,6 @@ import { MessageSuccess } from '../errors/Success';
 export function UserEdit({setUserTable}) {
     const navigate = useNavigate();
     const datas = useContext(DatasContext);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const params = new URLSearchParams(window.location.pathname);
     const [id,setId] = useState();
     const [loadingId,setLoadingId] = useState(false);
@@ -64,8 +64,6 @@ export function UserEdit({setUserTable}) {
         }
 
     },[id, user, username, mail, loadingId, loadingUser, params]);
-  
-       
  
     const handleSubmit = async () => {
         initErrors();
