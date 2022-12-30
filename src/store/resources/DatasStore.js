@@ -40,11 +40,11 @@ class DatasStore {
                 for (let i = 0; i < this.DbTables.length; i++) {
                     let tableName = '';
                     // separates table names with underscore and hangs them up in camelCase
-                    if (this.DbTables[i].Tables_in_moovleendb.indexOf('_') !== -1) {
-                        const tableNames = this.DbTables[i].Tables_in_moovleendb.split('_');
+                    if (this.DbTables[i].Tables_in_addictocode_api.indexOf('_') !== -1) {
+                        const tableNames = this.DbTables[i].Tables_in_addictocode_api.split('_');
                         tableName = `${tableNames[0]}${tableNames[1].charAt(0).toUpperCase()}${tableNames[1].slice(1)}`;
                     } else {
-                        tableName = this.DbTables[i].Tables_in_moovleendb;
+                        tableName = this.DbTables[i].Tables_in_addictocode_api;
                     }
                     await this.retrieveAll(tableName);
                 }

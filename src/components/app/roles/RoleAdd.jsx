@@ -49,6 +49,9 @@ export function RoleAdd() {
         }else{
             setErrorName(validations.valid.role);
         }
+        setTimeout(()=>{
+          initErrors();
+      },3000)
     }
     
     return (

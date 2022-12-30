@@ -44,36 +44,29 @@ export async function logout(entity){
 }
 export async function getCSRFToken() {
     await axiosInstance.get('/csrfToken');
- };
+}
 
-// GEN
+// CRUD
 export async function selectAll(table){
-    return axiosInstance.get(`${table}/all`,{headers: {
-        "Authorization": `Bearer ${getToken()}`
-    }});
+    return axiosInstance.get(`${table}/all`,
+    {headers: {"Authorization": `Bearer ${getToken()}`}});
 }
 
 export async function addEntity(table,entity){
-    return axiosInstance.post(`${table}/add`,entity,{headers: {
-        "Authorization": `Bearer ${getToken()}`
-    }});
+    return axiosInstance.post(`${table}/add`,entity,
+    {headers: {"Authorization": `Bearer ${getToken()}`}});
 }
-
 export async function editEntity(table,entity){
     return axiosInstance.patch(`${table}/edit`,entity,
-    {headers: {
-        "Authorization": `Bearer ${getToken()}`
-    }});
+    {headers: {"Authorization": `Bearer ${getToken()}`}});
 }
 
 export async function selectEntity(table,id){
-    return axiosInstance.post(`${table}/show`,id,{headers: {
-        "Authorization": `Bearer ${getToken()}`
-    }});
+    return axiosInstance.post(`${table}/show`,id,
+    {headers: {"Authorization": `Bearer ${getToken()}`}});
 }
 
 export async function deleteEntity(table,id){
-    return axiosInstance.delete(`${table}/delete/${id}`,{headers: {
-        "Authorization": `Bearer ${getToken()}`
-    }});
+    return axiosInstance.delete(`${table}/delete/${id}`,
+    {headers: {"Authorization": `Bearer ${getToken()}`}});
 }

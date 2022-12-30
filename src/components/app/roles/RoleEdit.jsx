@@ -73,7 +73,7 @@ export function RoleEdit({setRoleTable}) {
                 }
                 setTimeout(()=>{
                   initErrors();
-              },5000)
+              },3000)
             }catch(e){
                 // console.log("error",e)
                 var  {error} = e.response.data;

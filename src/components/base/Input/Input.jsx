@@ -11,7 +11,7 @@ export function Input({label,idName,type,state,setState,icon,onclick}) {
             type={type}
             value={state} 
             onChange={e => setState(e.target.value)} />
-            {icon && <p className='text-xs flex items-center justify-end cursor-pointer' onClick={onclick}>Afficher les mots de passe <span className='text-xl ml-2'>{icon}</span></p>}
+            {icon && <p className='text-xs flex items-center justify-end cursor-pointer' onClick={onclick}>{type === "password" ? 'Afficher':'Masquer'} le mot de passe <span className='text-xl ml-2'>{icon}</span></p>}
         </div>
     );
 }

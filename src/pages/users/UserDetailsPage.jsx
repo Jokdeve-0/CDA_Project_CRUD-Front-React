@@ -37,7 +37,7 @@ export function UserDetailsPage() {
         <LayoutPage>
             <LayoutPage.Main>
                 <LayoutPage.Section>
-                    <UserEdit user={user} />
+                    <UserEdit user={user} setUser={setUser} />
                 </LayoutPage.Section>
                 <LayoutPage.Section>
                  <UserTable user={user} />

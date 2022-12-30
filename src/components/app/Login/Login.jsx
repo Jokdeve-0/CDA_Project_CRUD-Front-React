@@ -9,6 +9,8 @@ import { H2 } from '../../base/Title/H2';
 import cssStandard from '../../styles/base.module.scss';
 import { MessageError } from '../errors/Errors';
 import { authentification, setStateToken } from '../../../store/resources/authentification';
+import { BaseUser } from 'src/models/User';
+import { BsFillEyeSlashFill, BsFillEyeFill } from "react-icons/bs";
 
 export function Login() {
     const datas = useContext(DatasContext);
@@ -16,16 +18,28 @@ export function Login() {
     const [error, setError] = useState();
     const [mail, setMail] = useState("admin@moovleen.com");
     const [password, setPassword] = useState("Aa@1Aa@1");
+
+    const [typePassword, setTypePassword] = useState(true);
+    const [icon, setIcon] = useState(true);
    
     const handleSubmit = async () => {
-        const isLogin = await login({mail,password});
-        if(isLogin.status === 200){
-          await datasStore.initializeDatasStore(datas);
-          setStateToken(datas);
-          datas.isTokenValid[1](authentification());
-          document.location.href= '/home'       
+      const entity = new BaseUser({mail,password});
+
+        const valid = validations.checkers(entity,['mail','password']);
+        let isValid = true;
+        for( const val in valid ){if(valid[val]){isValid = false;}}
+        if(isValid){
+          const isLogin = await login({mail,password});
+          if(isLogin.status === 200){
+            await datasStore.initializeDatasStore(datas);
+            setStateToken(datas);
+            datas.isTokenValid[1](authentification());
+            document.location.href= '/home'       
+          }else{
+              setError(validations.messages.server);
+          }
         }else{
-            setError(validations.messages.server);
+          setError(validations.messages.ids);
         }
     }
     
@@ -43,7 +57,12 @@ export function Login() {
                 {error && <MessageError error={error} />}
                 <Input label={"Votre adresse Email"} idName={"mail"} type={"email"} state={mail} setState={setMail} />
 
-                <Input label={"Votre mot de passe"} idName={"password"} type={"password"} state={password} setState={setPassword} />
+                <Input label={"Mot de passe"} 
+                idName={"password"} type={typePassword? "password" : "text"} 
+                state={password} setState={setPassword} icon={icon ? <BsFillEyeFill/> : <BsFillEyeSlashFill/> } onclick={()=>{
+                    setTypePassword(!typePassword);
+                    setIcon(!icon);
+                }}/>
 
                 <div className={cssStandard.formBtnBox}>
                     <Button

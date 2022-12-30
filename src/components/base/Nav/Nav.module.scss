@@ -2,7 +2,7 @@
     @apply flex;
     @apply flex-row;
     @apply flex-wrap;
-    @apply justify-around;
+    @apply justify-start;
     @apply items-center;
     @apply bg-white;
     @apply border-gray-200;
@@ -10,6 +10,8 @@
     @apply lg:px-6;
     @apply py-2.5;
     @apply dark:bg-gray-800;
+    @apply max-w-3xl;
+    @apply mx-auto;
     div{
         @apply flex;
         @apply px-1;

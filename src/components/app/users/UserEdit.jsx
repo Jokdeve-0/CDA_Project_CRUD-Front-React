@@ -16,7 +16,7 @@ import { MessageSuccess } from '../errors/Success';
 import { current } from 'daisyui/src/colors';
 
 
-export function UserEdit({user}) {
+export function UserEdit({user,setUser}) {
     const navigate = useNavigate();
     const datas = useContext(DatasContext);
     const params = new URLSearchParams(window.location.pathname);
@@ -49,7 +49,7 @@ export function UserEdit({user}) {
         const getUser= async (userId)=>{
             const results = await (await selectEntity('user',{id:userId})).data.results;
             if(results[0]){
-              user[1](results[0]);
+              setUser(results[0]);
             }
         }
         if(!id){
@@ -84,7 +84,7 @@ export function UserEdit({user}) {
                 const newUserEdited = await editEntity('user',entity);
                 if(newUserEdited.status === 200){
                     await datasStore.initializeDatasStore(datas);
-                    user[1](entity);
+                    setUser(entity);
                     setSuccess('Mise à jour !');
                     setTimeout(()=>{
                         initErrors();
@@ -96,7 +96,8 @@ export function UserEdit({user}) {
                     },5000)
                 }
             }catch(e){
-                e.response.data.error 
+              console.log(e)
+                e.response && e.response.data.error 
                 && e.response.data.error.indexOf('user.unique_user_mail') !== -1
                 ? setErrorMail(validations.messages.mail)
                 : setErrorName(validations.messages.username);

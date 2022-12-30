@@ -46,7 +46,7 @@ export function UserAdd() {
         setErrorPassConf(valid.passwordConfirme);   
         setTimeout(()=>{
             initErrors();
-        },5000)
+        },3000)
     }
 
     const handleSubmit = async () => {
@@ -69,8 +69,8 @@ export function UserAdd() {
                     },5000)
                 }
             }catch(e){
-                e.response.data.error 
-                && e.response.data.error.indexOf('user.unique_user_mail') !== -1
+                e.reponse && e.response.data.error 
+                && e.response.data.error.indexOf('mail') !== -1
                 ? setErrorMail(validations.messages.mail)
                 : setErrorName(validations.messages.username);
                 setTimeout(()=>{
@@ -107,7 +107,7 @@ export function UserAdd() {
                 {errorPass && <MessageError error={errorPass} />}
                 <Input label={"Mot de passe"} 
                 idName={"password"} type={typePassword? "password" : "text"} 
-                state={password} setState={setPassword} icon={icon ? <BsFillEyeSlashFill/> : <BsFillEyeFill/> } onclick={()=>{
+                state={password} setState={setPassword} icon={icon ? <BsFillEyeFill/> : <BsFillEyeSlashFill/> } onclick={()=>{
                     setTypePassword(!typePassword);
                     setIcon(!icon);
                 }}/>
